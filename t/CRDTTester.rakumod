@@ -1,6 +1,6 @@
 use Test;
 use CRDT;
-sub test-copy(CRDT $a is copy) is export is test-assertion {
+sub test-copy(CRDT $a is copy) is export #`(is test-assertion) {
     subtest {
         my $b = $a;
         my $c;
@@ -14,7 +14,7 @@ sub test-copy(CRDT $a is copy) is export is test-assertion {
         }
     }, "Test copy"
 }
-sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export is test-assertion {
+sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test-assertion) {
     $a-o .= copy;
     $b-o .= copy;
     subtest {

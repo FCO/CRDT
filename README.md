@@ -3,19 +3,22 @@
 NAME
 ====
 
-CRDT - blah blah blah
+CRDT - Conflict-free Replicated Data Type
 
 SYNOPSIS
 ========
 
 ```raku
-use CRDT;
+use G-Counter;
+use PN-Counter;
+use G-Set;
+use P2-Set;
 ```
 
 DESCRIPTION
 ===========
 
-CRDT is ...
+CRDT is [https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
 
 AUTHOR
 ======

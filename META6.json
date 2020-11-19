@@ -7,7 +7,7 @@
   "depends" : [
     "UUID"
   ],
-  "description" : "blah blah blah",
+  "description" : "Conflict-free Replicated Data Type",
   "license" : "Artistic-2.0",
   "name" : "CRDT",
   "perl" : "6.d",
