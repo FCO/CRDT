@@ -9,19 +9,22 @@ method copy(::T CRDT:D: --> T)    { ... }
 
 =head1 NAME
 
-CRDT - blah blah blah
+CRDT - Conflict-free Replicated Data Type
 
 =head1 SYNOPSIS
 
 =begin code :lang<raku>
 
-use CRDT;
+use G-Counter;
+use PN-Counter;
+use G-Set;
+use P2-Set;
 
 =end code
 
 =head1 DESCRIPTION
 
-CRDT is ...
+CRDT is L<https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type>
 
 =head1 AUTHOR
 
