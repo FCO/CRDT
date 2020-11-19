@@ -4,7 +4,9 @@
     "Fernando Correa"
   ],
   "build-depends" : [ ],
-  "depends" : [ ],
+  "depends" : [
+    "UUID"
+  ],
   "description" : "blah blah blah",
   "license" : "Artistic-2.0",
   "name" : "CRDT",
