@@ -1,0 +1,6 @@
+use Test;
+use CRDT;
+
+pass "replace me";
+
+done-testing;

@@ -1,0 +1,30 @@
+{
+  "auth" : "cpan:FCO",
+  "authors" : [
+    "Fernando Correa"
+  ],
+  "build-depends" : [ ],
+  "depends" : [ ],
+  "description" : "blah blah blah",
+  "license" : "Artistic-2.0",
+  "name" : "CRDT",
+  "perl" : "6.d",
+  "provides" : {
+    "CRDT" : "lib/CRDT.rakumod",
+    "G-Counter" : "lib/G-Counter.rakumod",
+    "G-Set" : "lib/G-Set.rakumod",
+    "P2-Set" : "lib/P2-Set.rakumod",
+    "PN-Counter" : "lib/PN-Counter.rakumod"
+  },
+  "resources" : [ ],
+  "source-url" : "https://github.com/FCO/CRDT.git",
+  "tags" : [
+    "CRDT",
+    "conflict-free",
+    "data-structure",
+    "replicated",
+    "concurrent"
+  ],
+  "test-depends" : [ ],
+  "version" : "0.0.1"
+}
