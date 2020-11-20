@@ -1,6 +1,8 @@
 Revision history for CRDT
 
 {{$NEXT}}
+
+0.0.2  2020-11-20T05:09:48Z
     - LWW-Element-Set
 
 0.0.1  2020-11-19T19:42:48Z
