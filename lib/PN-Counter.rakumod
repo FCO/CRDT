@@ -47,7 +47,7 @@ multi method merge(::?CLASS $b) {
     self.merge: $b.export
 }
 
-multi method merge(% (:$positive, :$negative)) {
+multi method merge(% (:$positive!, :$negative!)) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
     %!positive = |do for (%!positive.keys ∪ $positive).keys -> $key {

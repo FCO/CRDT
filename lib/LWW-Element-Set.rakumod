@@ -74,7 +74,7 @@ multi method merge(::?CLASS $b) {
     self.merge: $b.export
 }
 
-multi method merge(% (:$add, :$del, :$timestamp)) {
+multi method merge(% (:$add!, :$del!, :$timestamp!)) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
     %!add       = |(%!add ∪ $add);
