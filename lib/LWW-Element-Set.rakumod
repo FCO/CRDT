@@ -22,6 +22,12 @@ method !del is rw {
     %!del
 }
 
+method export {
+    await $!lock.lock;
+    LEAVE $!lock.unlock;
+    %(:%!add, :%!del, :$!timestamp)
+}
+
 method !timestamp is rw {
     $!timestamp
 }
@@ -64,11 +70,15 @@ method copy {
     $obj
 }
 
-method merge(::?CLASS $b) {
+multi method merge(::?CLASS $b) {
+    self.merge: $b.export
+}
+
+multi method merge(% (:$add, :$del, :$timestamp)) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
-    %!add       = |(%!add ∪ $b!add);
-    %!del       = |(%!del ∪ $b!del);
-    $!timestamp = $!timestamp max $b!timestamp;
+    %!add       = |(%!add ∪ $add);
+    %!del       = |(%!del ∪ $del);
+    $!timestamp = $!timestamp max $timestamp;
     self
 }

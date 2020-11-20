@@ -14,6 +14,12 @@ method !del is rw {
     %!del
 }
 
+method export {
+    await $!lock.lock;
+    LEAVE $!lock.unlock;
+    %(:%!add, :%!del)
+}
+
 method set($item) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
@@ -39,10 +45,14 @@ method copy {
     $obj
 }
 
-method merge(::?CLASS $b) {
+multi method merge(::?CLASS $b) {
+    self.merge: $b.export
+}
+
+multi method merge(% (:$add, :$del)) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
-    %!add = |(%!add ∪ $b!add);
-    %!del = |(%!del ∪ $b!del);
+    %!add = |(%!add ∪ $add);
+    %!del = |(%!del ∪ $del);
     self
 }

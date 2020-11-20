@@ -10,7 +10,15 @@ has Lock::Async $!lock .= new;
 
 method !values is rw { %!values }
 
+method export {
+    await $!lock.lock;
+    LEAVE $!lock.unlock;
+    %!values
+}
+
 method set($item) {
+    await $!lock.lock;
+    LEAVE $!lock.unlock;
     %!values.set: $item
 }
 
@@ -28,9 +36,14 @@ method copy {
     $obj
 }
 
-method merge(::?CLASS $b) {
+
+multi method merge(::?CLASS $b) {
+    self.merge: $b.export;
+}
+
+multi method merge($data) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
-    %!values = |(%!values ∪ $b!values);
+    %!values = |(%!values ∪ $data);
     self
 }

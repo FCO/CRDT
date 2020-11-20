@@ -13,6 +13,12 @@ method !negative is rw {
     %!negative
 }
 
+method export {
+    await $!lock.lock;
+    LEAVE $!lock.unlock;
+    %(:%!positive, :%!negative)
+}
+
 method increment {
     await $!lock.lock;
     LEAVE $!lock.unlock;
@@ -37,14 +43,18 @@ method compare(::?CLASS $b) {
     self.value <=> $b.value
 }
 
-method merge(::?CLASS $b) {
+multi method merge(::?CLASS $b) {
+    self.merge: $b.export
+}
+
+multi method merge(% (:$positive, :$negative)) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
-    %!positive = |do for (%!positive.keys ∪ $b!positive).keys -> $key {
-        $key => %!positive{$key} max $b!positive{$key}
+    %!positive = |do for (%!positive.keys ∪ $positive).keys -> $key {
+        $key => %!positive{$key} max $positive{$key}
     }.BagHash;
-    %!negative = |do for (%!negative.keys ∪ $b!negative).keys -> $key {
-        $key => %!negative{$key} max $b!negative{$key}
+    %!negative = |do for (%!negative.keys ∪ $negative).keys -> $key {
+        $key => %!negative{$key} max $negative{$key}
     }.BagHash;
     self
 }

@@ -10,6 +10,12 @@ has Lock::Async $!lock .= new;
 
 method !values is rw { %!values }
 
+method export {
+    await $!lock.lock;
+    LEAVE $!lock.unlock;
+    %!values
+}
+
 method increment {
     await $!lock.lock;
     LEAVE $!lock.unlock;
@@ -27,11 +33,15 @@ method compare(::?CLASS $b) {
     self.value <=> $b.value
 }
 
-method merge(::?CLASS $b) {
+multi method merge(::?CLASS $b) {
+    self.merge: $b.export
+}
+
+multi method merge($data) {
     await $!lock.lock;
     LEAVE $!lock.unlock;
-    %!values = |do for (%!values.keys ∪ $b!values).keys -> $key {
-        $key => %!values{$key} max $b!values{$key}
+    %!values = |do for (%!values.keys ∪ $data).keys -> $key {
+        $key => %!values{$key} max $data{$key}
     }.BagHash;
     self
 }

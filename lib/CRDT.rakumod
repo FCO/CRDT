@@ -2,8 +2,9 @@ use UUID;
 unit role CRDT:ver<0.0.2>:auth<cpan:FCO>;
 
 has Str $.instance-id = ~UUID.new;
-method merge(::T CRDT:D: T --> T) { ... }
+method merge(::T CRDT:D: $ --> T) { ... }
 method copy(::T CRDT:D: --> T)    { ... }
+method export                     { ... }
 
 =begin pod
 
