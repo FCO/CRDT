@@ -1,18 +1,25 @@
 use CRDT;
+use CRDT::Timestamp;
 #| Implements 2P-Set
 unit class LWW-Element-Set does CRDT does Associative;
 
 class Item {
-    has      $.value     is required;
-    has UInt $.timestamp is required;
+    has                 $.value     is required;
+    has CRDT::Timestamp $.timestamp is required;
 
     method WHICH { $!value.WHICH }
 }
 
-has UInt        $!timestamp;
-has             %!add is SetHash;
-has             %!del is SetHash;
-has Lock::Async $!lock .= new;
+has CRDT::Timestamp $!timestamp;
+has                 %!add is SetHash;
+has                 %!del is SetHash;
+has Lock::Async     $!lock .= new;
+
+method TWEAK(|) {
+    without $!timestamp {
+        $!timestamp .= new: :instance-id($.instance-id)
+    }
+}
 
 method !add is rw {
     %!add
@@ -66,7 +73,7 @@ method copy {
     my $obj        = ::?CLASS.new;
     $obj!add       = |%!add;
     $obj!del       = |%!del;
-    $obj!timestamp = $!timestamp;
+    $obj!timestamp = CRDT::Timestamp.new: :instance-id($obj.instance-id), :counter($!timestamp.counter);
     $obj
 }
 
@@ -79,6 +86,8 @@ multi method merge(% (:$add!, :$del!, :$timestamp!)) {
     LEAVE $!lock.unlock;
     %!add       = |(%!add ∪ $add);
     %!del       = |(%!del ∪ $del);
-    $!timestamp = $!timestamp max $timestamp;
+    my $l = $!timestamp.counter;
+    my $r = $timestamp.counter;
+    $!timestamp++ xx $r - $l if $r > $l;
     self
 }
