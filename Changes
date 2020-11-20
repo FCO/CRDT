@@ -1,6 +1,8 @@
 Revision history for CRDT
 
 {{$NEXT}}
+
+0.0.4  2020-11-20T06:08:16Z
     - make required merge data required
 
 0.0.3  2020-11-20T06:01:44Z
