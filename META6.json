@@ -16,7 +16,8 @@
     "G-Counter" : "lib/G-Counter.rakumod",
     "G-Set" : "lib/G-Set.rakumod",
     "P2-Set" : "lib/P2-Set.rakumod",
-    "PN-Counter" : "lib/PN-Counter.rakumod"
+    "PN-Counter" : "lib/PN-Counter.rakumod",
+    "LWW-Element-Set" : "lib/LWW-Element-Set.rakumod"
   },
   "resources" : [ ],
   "source-url" : "https://github.com/FCO/CRDT.git",
