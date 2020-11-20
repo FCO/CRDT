@@ -1,5 +1,5 @@
 use UUID;
-unit role CRDT:ver<0.0.2>:auth<cpan:FCO>;
+unit role CRDT:ver<0.0.3>:auth<cpan:FCO>;
 
 has Str $.instance-id = ~UUID.new;
 method merge(::T CRDT:D: $ --> T) { ... }
