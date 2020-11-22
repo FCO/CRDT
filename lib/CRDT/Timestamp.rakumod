@@ -38,3 +38,7 @@ multi infix:<< >= >>(::?CLASS $a, ::?CLASS $b) is export {
 multi infix:<cmp>(::?CLASS $a, ::?CLASS $b) is export {
     ($a.counter, $a.instance-id) cmp ($b.counter, $b.instance-id)
 }
+
+multi infix:<max>(::?CLASS $a, ::?CLASS $b) is export {
+    max $a, $b, :by{ .counter, .instance-id }
+}

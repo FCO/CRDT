@@ -17,6 +17,7 @@
     "G-Counter" : "lib/G-Counter.rakumod",
     "G-Set" : "lib/G-Set.rakumod",
     "LWW-Element-Set" : "lib/LWW-Element-Set.rakumod",
+    "LWW-Register" : "lib/LWW-Register.rakumod",
     "OR-Set" : "lib/OR-Set.rakumod",
     "P2-Set" : "lib/P2-Set.rakumod",
     "PN-Counter" : "lib/PN-Counter.rakumod"

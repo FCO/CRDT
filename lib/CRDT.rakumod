@@ -22,6 +22,7 @@ use G-Set;
 use P2-Set;
 use LWW-Element-Set;
 use OR-Set;
+use LWW-Register;
 
 =end code
 

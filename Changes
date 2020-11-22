@@ -2,6 +2,7 @@ Revision history for CRDT
 
 {{$NEXT}}
     - Fix timestamp
+    - LLW-Register
 
 0.0.5  2020-11-20T09:12:13Z
     - OR-Set

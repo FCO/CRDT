@@ -37,7 +37,8 @@ is +$a, 7, "... did not change";
 
 test-copy $a;
 
-test-merge $a, $b, -> $res {
+test-merge $a, $b, -> $res, :$last-merge {
+    is +$res, +$last-merge with $last-merge;
     isa-ok $res, G-Counter;
     is +$res,       8, "Is it 8?";
     is +($res + 1), 9, "Plus one equals 9";

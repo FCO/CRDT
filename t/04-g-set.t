@@ -25,7 +25,13 @@ nok %a<c>;
 
 test-copy %a;
 
-test-merge %a, $b, -> $res {
+test-merge %a, $b, -> $res, :$last-merge {
+    is $res<a>, $last-merge<a> with $last-merge;
+    is $res<b>, $last-merge<b> with $last-merge;
+    is $res<c>, $last-merge<c> with $last-merge;
+    is $res<d>, $last-merge<d> with $last-merge;
+    is $res<e>, $last-merge<e> with $last-merge;
+    is $res<f>, $last-merge<f> with $last-merge;
     ok $res<a>;
     ok $res<b>;
     ok $res<c>;

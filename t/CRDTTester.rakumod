@@ -19,14 +19,15 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
     my $b-x = $b-o.export;
     $a-o .= copy;
     $b-o .= copy;
+    my $last-merge;
     subtest {
         subtest {
             for ^10 {
                 my $a = $a-o.copy;
                 my $b = $b-o.copy;
 
-                test $a.merge: $b;
-                test $a
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $a.merge: $b;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $a
             }
         }
         subtest {
@@ -34,8 +35,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-o.copy;
                 my $b = $b-o.copy;
 
-                test $b.merge: $a;
-                test $b
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $b.merge: $a;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $b
             }
         }
         subtest {
@@ -43,8 +44,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-o.copy;
                 my $b = $b-o.copy;
 
-                test $a.merge($b).merge: $a;
-                test $a
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $a.merge($b).merge: $a;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $a
             }
         }
         subtest {
@@ -52,8 +53,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-o.copy;
                 my $b = $b-o.copy;
 
-                test $b.merge($a).merge: $b;
-                test $b
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $b.merge($a).merge: $b;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $b
             }
         }
     }, "Test merge";
@@ -64,8 +65,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-o.copy;
                 my $b = $b-x;
 
-                test $a.merge: $b;
-                test $a
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $a.merge: $b;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $a
             }
         }
         subtest {
@@ -73,8 +74,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-x;
                 my $b = $b-o.copy;
 
-                test $b.merge: $a;
-                test $b
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $b.merge: $a;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $b
             }
         }
         subtest {
@@ -82,8 +83,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-o.copy;
                 my $b = $b-x;
 
-                test $a.merge($b).merge: $a;
-                test $a
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $a.merge($b).merge: $a;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $a
             }
         }
         subtest {
@@ -91,8 +92,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-x;
                 my $b = $b-o.copy;
 
-                test $b.merge($a).merge: $b;
-                test $b
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $b.merge($a).merge: $b;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $b
             }
         }
         subtest {
@@ -100,8 +101,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-o.copy;
                 my $b = $b-x;
 
-                test $a.merge($b).merge: $a-x;
-                test $a
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $a.merge($b).merge: $a-x;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $a
             }
         }
         subtest {
@@ -109,8 +110,8 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 my $a = $a-x;
                 my $b = $b-o.copy;
 
-                test $b.merge($a).merge: $b-x;
-                test $b
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $last-merge = $b.merge($a).merge: $b-x;
+                test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $b
             }
         }
     }, "Test merge exported data"
