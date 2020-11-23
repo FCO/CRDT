@@ -19,17 +19,44 @@ method export {
     %(:%!positive, :%!negative)
 }
 
-method increment {
+multi method increment {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     %!positive{ $.instance-id }++;
     self
 }
 
-method decrement {
+multi method increment(UInt() $b) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
+    %!positive{ $.instance-id } += $b;
+    self
+}
+
+
+multi method decrement {
+    await $!lock.lock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     %!negative{ $.instance-id }++;
+    self
+}
+
+multi method decrement(UInt() $b) {
+    await $!lock.lock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
+    %!negative{ $.instance-id } += $b;
     self
 }
 
@@ -49,7 +76,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge(% (:$positive!, :$negative!)) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     %!positive = |do for (%!positive.keys ∪ $positive).keys -> $key {
         $key => %!positive{$key} max $positive{$key}
     }.BagHash;
@@ -99,25 +129,25 @@ multi postfix:<-->(::?CLASS $a) is export {
 }
 
 multi infix:<+=>(::?CLASS $a, UInt() $b) is export {
-    $a.increment for ^$b
+    $a.increment: $b
 }
 
 multi infix:<-=>(::?CLASS $a, UInt() $b) is export {
-    $a.decrement for ^$b
+    $a.decrement: $b
 }
 
 multi infix:<+>(::?CLASS $a, ::?CLASS $b) is export { $a.copy.merge: $b }
 
 multi infix:<+>(::?CLASS $a, UInt $b) is export {
     my ::?CLASS $c = $a.copy;
-    $c.increment for ^$b;
+    $c.increment: $b;
     $c
 }
 
-multi infix:<+>(::?CLASS $a, ::?CLASS $b) is export { $a.copy.merge: $b.invert }
+multi infix:<->(::?CLASS $a, ::?CLASS $b) is export { $a.copy.merge: $b.invert }
 
-multi infix:<+>(::?CLASS $a, UInt $b) is export {
+multi infix:<->(::?CLASS $a, UInt $b) is export {
     my ::?CLASS $c = $a.copy;
-    $c.decrement for ^$b;
+    $c.decrement: $b;
     $c
 }

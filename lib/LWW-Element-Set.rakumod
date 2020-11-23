@@ -41,14 +41,22 @@ method !timestamp is rw {
 
 method set($item) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     %!add.set: Item.new: :value($item), :timestamp($!timestamp++);
+    $item
 }
 
 method unset($item) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     %!del.set: Item.new: :value($item), :timestamp($!timestamp++);
+    $item
 }
 
 method AT-KEY($item) {
@@ -83,7 +91,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge(% (:$add!, :$del!, :$timestamp!)) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     %!add       = |(%!add ∪ $add);
     %!del       = |(%!del ∪ $del);
     my $l = $!timestamp.counter;

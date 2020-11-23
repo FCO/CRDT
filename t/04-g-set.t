@@ -6,6 +6,10 @@ use G-Set;
 
 my %a is G-Set;
 
+test-supply %a.changed, *.keys.sort, < a       >, 0;
+test-supply %a.changed, *.keys.sort, < a b     >, 1;
+test-supply %a.changed, *.keys.sort, < a b d   >, 2;
+
 %a.set: "a";
 
 ok %a<a>;
@@ -39,5 +43,13 @@ test-merge %a, $b, -> $res, :$last-merge {
     nok $res<e>;
     nok $res<f>;
 }
+
+test-supply %a.merged, *.keys.sort, < 1 2 3 a b d >, 0;
+test-supply %a.merged, *.keys.sort, < 1 2 3 a b d >, 1;
+test-supply %a.merged, *.keys.sort, < 1 2 3 A B a b d >, 2;
+
+%a.merge: set <1 2 3>;
+%a.merge: set <1 2 3 a b d>;
+%a.merge: set < A B >;
 
 done-testing;

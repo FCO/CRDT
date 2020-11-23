@@ -29,9 +29,14 @@ method !timestamp is rw {
 
 method set($value) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     $!timestamp++;
     $!value = $value;
+    $value
+
 }
 
 method get {
@@ -53,7 +58,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge(% (:$value!, :$timestamp!)) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     if $timestamp > $!timestamp {
         $!value = $value;
         my $l = $!timestamp.counter;

@@ -6,6 +6,13 @@ use P2-Set;
 
 my %a is P2-Set;
 
+test-supply %a.changed, *.<add>.keys.sort, < a   >, 0;
+test-supply %a.changed, *.<del>.keys.sort, <     >, 0;
+test-supply %a.changed, *.<add>.keys.sort, < a b >, 1;
+test-supply %a.changed, *.<del>.keys.sort, <     >, 1;
+test-supply %a.changed, *.<add>.keys.sort, < a b >, 2;
+test-supply %a.changed, *.<del>.keys.sort, < b   >, 2;
+
 %a.set: "a";
 
 ok %a<a>;
@@ -43,5 +50,13 @@ test-merge %a, $b, -> $res, :$last-merge {
     nok $res<e>;
     nok $res<f>;
 }
+
+test-supply %a.changed, *.<add>.keys.sort, < A a b >, 0;
+test-supply %a.changed, *.<del>.keys.sort, < b     >, 0;
+test-supply %a.changed, *.<add>.keys.sort, < A a b >, 1;
+test-supply %a.changed, *.<del>.keys.sort, < 1 b   >, 1;
+
+%a.merge: %(:add(set < A >), :del(set <   >));
+%a.merge: %(:add(set <   >), :del(set < 1 >));
 
 done-testing;

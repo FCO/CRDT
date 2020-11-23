@@ -35,7 +35,10 @@ method export {
 
 method set($value) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     unless %!add{$value} {
         %!add.set: Item.new: :$value
     }
@@ -46,7 +49,10 @@ method set($value) {
 
 method unset($value) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     unless %!del{$value} {
         %!del.set: Item.new: :$value
     }
@@ -87,7 +93,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge(% (:$add!, :$del!)) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     %!add       = |(%!add ∪ $add);
     %!del       = |(%!del ∪ $del);
     self

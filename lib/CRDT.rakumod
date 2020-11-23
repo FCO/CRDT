@@ -1,10 +1,23 @@
 use UUID;
 unit role CRDT:ver<0.0.6>:auth<cpan:FCO>;
 
-has Str $.instance-id = ~UUID.new;
+has Str $.instance-id           = ~UUID.new;
+has Supplier $!change-supplier .= new;
+has Supply $.changed            = $!change-supplier.Supply;
+has Supplier $!merge-supplier  .= new;
+has Supply $.merged             = $!merge-supplier.Supply;
+
+method !emit-change { $!change-supplier.emit: self.export }
+method !emit-merge  { $!merge-supplier.emit:  self.export }
+
 method merge(::T CRDT:D: $ --> T) { ... }
 method copy(::T CRDT:D: --> T)    { ... }
 method export                     { ... }
+
+method DESTROY {
+    $!change-supplier.done;
+    $!merge-supplier.done;
+}
 
 =begin pod
 

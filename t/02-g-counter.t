@@ -6,6 +6,14 @@ use CRDTTester;
 
 my G-Counter $a .= new;
 
+my $iid = $a.instance-id;
+
+test-supply $a.changed, *.{$iid}, 1, 0;
+test-supply $a.changed, *.{$iid}, 2, 1;
+test-supply $a.changed, *.{$iid}, 3, 2;
+test-supply $a.changed, *.{$iid}, 4, 3;
+test-supply $a.changed, *.{$iid}, 7, 4;
+
 is $a.value, 0, "Starts with 0";
 is +$a,      0, "... +again";
 
@@ -51,5 +59,20 @@ test-merge $a, $b, -> $res, :$last-merge {
 
 dies-ok { $a-- };
 dies-ok { --$a };
+
+test-supply $a.merged, *.{$iid}, 7, 0;
+test-supply $a.merged, *.<b>   , 5, 0;
+test-supply $a.merged, *.{$iid}, 7, 1;
+test-supply $a.merged, *.<b>   , 5, 1;
+test-supply $a.merged, *.{$iid}, 7, 2;
+test-supply $a.merged, *.<b>   , 6, 2;
+test-supply $a.merged, *.{$iid}, 8, 3..7;
+test-supply $a.merged, *.<b>   , 7, 3..7;
+test-supply $a.merged, *.<c>   , 1, 3..7;
+
+$a.merge: { b => 5 };
+$a.merge: { b => 3, $iid => 3 };
+$a.merge: { b => 6, $iid => 3 };
+$a.merge: { c => 1, b => 7, $iid => 8 } for ^5;
 
 done-testing;

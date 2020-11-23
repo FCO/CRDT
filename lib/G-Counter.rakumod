@@ -16,10 +16,24 @@ method export {
     %!values
 }
 
-method increment {
+multi method increment {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
     %!values{ $.instance-id }++;
+    self
+}
+
+
+multi method increment(Int() $b) {
+    await $!lock.lock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
+    %!values{ $.instance-id } += $b;
     self
 }
 
@@ -39,7 +53,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge($data) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     %!values = |do for (%!values.keys ∪ $data).keys -> $key {
         $key => %!values{$key} max $data{$key}
     }.BagHash;
@@ -70,7 +87,7 @@ multi prefix:<-->(::?CLASS)  is export { X::G-Counter::Decrease.new.throw }
 multi postfix:<-->(::?CLASS) is export { X::G-Counter::Decrease.new.throw }
 
 multi infix:<+=>(::?CLASS $a, UInt() $b) is export {
-    $a.increment for ^$b
+    $a.increment: $b
 }
 
 multi infix:<+>(::?CLASS $a, ::?CLASS $b) is export { $a.copy.merge: $b }

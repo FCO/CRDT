@@ -18,8 +18,12 @@ method export {
 
 method set($item) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
-    %!values.set: $item
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
+    %!values.set: $item;
+    $item
 }
 
 method unset($) { X::G-Set::Unset.new.throw }
@@ -43,7 +47,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge($data) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     %!values = |(%!values ∪ $data);
     self
 }

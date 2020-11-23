@@ -3,8 +3,16 @@ use lib ".";
 use lib "t";
 use CRDTTester;
 use LWW-Element-Set;
+use CRDT::Timestamp;
 
 my %a is LWW-Element-Set;
+
+test-supply %a.changed, *.<add>.keys>>.value.sort, < a   >, 0;
+test-supply %a.changed, *.<del>.keys>>.value.sort, <     >, 0;
+test-supply %a.changed, *.<add>.keys>>.value.sort, < a b >, 1;
+test-supply %a.changed, *.<del>.keys>>.value.sort, <     >, 1;
+test-supply %a.changed, *.<add>.keys>>.value.sort, < a b >, 2;
+test-supply %a.changed, *.<del>.keys>>.value.sort, < b   >, 2;
 
 %a.set: "a";
 
@@ -56,5 +64,13 @@ test-merge %a, $b, -> $res, :$last-merge {
     $res.unset: "d";
     nok $res<d>;
 }
+
+#my $*TEST-DEBUG = True;
+test-supply %a.merged, *.<add>.keys>>.value.sort, < 1 a b >, 0;
+test-supply %a.merged, *.<del>.keys>>.value.sort, < b     >, 0;
+
+my LWW-Element-Set::Item $item .= new: :1value, :timestamp(CRDT::Timestamp.new: :instance-id<b>);
+
+%a.merge: %( :add(set(($item))), :del(set()), :timestamp(CRDT::Timestamp.new: :instance-id<b>) );
 
 done-testing;

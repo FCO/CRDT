@@ -22,14 +22,22 @@ method export {
 
 method set($item) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
-    %!add.set: $item
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
+    %!add.set: $item;
+    $item
 }
 
 method unset($item) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
-    %!del.set: $item #if %!add{$item}
+    LEAVE {
+        $!lock.unlock;
+        self!emit-change;
+    }
+    %!del.set: $item;
+    $item
 }
 
 method AT-KEY($item) {
@@ -51,7 +59,10 @@ multi method merge(::?CLASS $b) {
 
 multi method merge(% (:$add!, :$del!)) {
     await $!lock.lock;
-    LEAVE $!lock.unlock;
+    LEAVE {
+        $!lock.unlock;
+        self!emit-merge;
+    }
     %!add = |(%!add ∪ $add);
     %!del = |(%!del ∪ $del);
     self

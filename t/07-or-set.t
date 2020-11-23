@@ -6,6 +6,13 @@ use OR-Set;
 
 my %a is OR-Set;
 
+test-supply %a.changed, *.<add>.keys>>.value.sort, < a   >, 0;
+test-supply %a.changed, *.<del>.keys>>.value.sort, <     >, 0;
+test-supply %a.changed, *.<add>.keys>>.value.sort, < a b >, 1;
+test-supply %a.changed, *.<del>.keys>>.value.sort, <     >, 1;
+test-supply %a.changed, *.<add>.keys>>.value.sort, < a b >, 2;
+test-supply %a.changed, *.<del>.keys>>.value.sort, < b   >, 2;
+
 %a.set: "a";
 
 ok %a<a>;
@@ -57,5 +64,12 @@ test-merge %a, $b, -> $res, :$last-merge {
     $res.unset: "d";
     nok $res<d>;
 }
+
+test-supply %a.merged, *.<add>.keys>>.value.sort, < 1 a b >, 0;
+test-supply %a.merged, *.<del>.keys>>.value.sort, < b     >, 0;
+
+my OR-Set::Item $item .= new: :1value;
+
+%a.merge: %( :add(set(($item))), :del(set()) );
 
 done-testing;

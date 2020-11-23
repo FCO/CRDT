@@ -1,5 +1,19 @@
 use Test;
 use CRDT;
+
+sub test-supply($supply, &test, $expected, $turn, $data?) is export {
+    my $tap = $supply.tap: -> $val {
+        given $++ {
+            if $_ == $turn {
+                dd %( :count($_), :$turn, :$expected, :$val, :$data ) if $*TEST-DEBUG;
+                is test($val), $expected, "Right emited? expected: { $expected }; iteration: $turn; { $data // "" }";
+            } elsif $_ > $turn {
+                $tap.close;
+            }
+        }
+    }
+}
+
 sub test-copy(CRDT $a is copy) is export #`(is test-assertion) {
     subtest {
         my $b = $a;
