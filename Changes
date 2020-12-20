@@ -1,6 +1,8 @@
 Revision history for CRDT
 
 {{$NEXT}}
+
+0.0.8  2020-12-20T04:11:45Z
     - add .keys and .elems on Sets
 
 0.0.7  2020-11-23T02:39:32Z
