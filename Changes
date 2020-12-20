@@ -1,6 +1,7 @@
 Revision history for CRDT
 
 {{$NEXT}}
+    - add .keys and .elems on Sets
 
 0.0.7  2020-11-23T02:39:32Z
     - emit event on change

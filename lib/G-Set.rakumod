@@ -5,7 +5,7 @@ class X::G-Set::Unset is Exception {
     method message { "A item cannot be unset on a G-Set" }
 }
 
-has             %!values is SetHash;
+has             %!values is SetHash handles <keys elems>;
 has Lock::Async $!lock .= new;
 
 method !values is rw { %!values }

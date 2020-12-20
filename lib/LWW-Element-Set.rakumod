@@ -77,6 +77,12 @@ method AT-KEY($item) {
     }
 }
 
+method keys {
+    %!add.keys>>.value.grep: { self.AT-KEY($_) }
+}
+
+method elems { self.keys.elems }
+
 method copy {
     my $obj        = ::?CLASS.new;
     $obj!add       = |%!add;

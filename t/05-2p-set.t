@@ -34,6 +34,9 @@ nok %a<c>;
 
 $b.unset: "d";
 
+is %a.elems, 1;
+is %a.keys.sort, < a >;
+
 test-copy %a;
 
 test-merge %a, $b, -> $res, :$last-merge {

@@ -27,6 +27,9 @@ nok %a<c>;
 
 %a.set: "d";
 
+is %a.elems, 3;
+is %a.keys.sort, <a b d>;
+
 test-copy %a;
 
 test-merge %a, $b, -> $res, :$last-merge {

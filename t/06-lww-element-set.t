@@ -44,6 +44,9 @@ ok $b<d>;
 $b.unset: "d";
 nok $b<d>;
 
+is %a.elems, 1;
+is %a.keys.sort, < a >;
+
 test-copy %a;
 
 test-merge %a, $b, -> $res, :$last-merge {

@@ -46,6 +46,12 @@ method AT-KEY($item) {
     !%!del.AT-KEY($item) && %!add.AT-KEY: $item
 }
 
+method keys {
+    %!add.keys.grep: { self.AT-KEY($_) }
+}
+
+method elems { self.keys.elems }
+
 method copy {
     my $obj = ::?CLASS.new;
     $obj!add = |%!add;
