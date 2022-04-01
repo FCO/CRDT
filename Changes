@@ -1,6 +1,7 @@
 Revision history for CRDT
 
 {{$NEXT}}
+    - move to zef ecosystem
 
 0.0.8  2020-12-20T04:11:45Z
     - add .keys and .elems on Sets
