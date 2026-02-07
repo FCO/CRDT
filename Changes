@@ -1,6 +1,7 @@
 Revision history for CRDT
 
 {{$NEXT}}
+    - Ask AI to write docs
 
 0.0.11  2026-02-07T14:25:42Z
     - make clock "global"

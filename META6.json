@@ -8,7 +8,7 @@
   "depends": [
     "UUID"
   ],
-  "description": "Conflict-free Replicated Data Type",
+  "description": "Conflict-free Replicated Data Types for Raku",
   "license": "Artistic-2.0",
   "name": "CRDT",
   "perl": "6.d",
