@@ -40,10 +40,16 @@ method unset($item) {
     $item
 }
 
-method AT-KEY($item) {
-    await $!lock.lock;
-    LEAVE $!lock.unlock;
-    !%!del.AT-KEY($item) && %!add.AT-KEY: $item
+method AT-KEY($item) is rw {
+    Proxy.new:
+        FETCH => sub ($) {
+            await $!lock.lock;
+            LEAVE $!lock.unlock;
+            !%!del.AT-KEY($item) && %!add.AT-KEY: $item
+        },
+        STORE => sub ($, Bool() $value) {
+            $value ?? self.set: $item !! self.unset: $item
+        }
 }
 
 method keys {

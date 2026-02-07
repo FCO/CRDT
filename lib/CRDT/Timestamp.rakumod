@@ -1,10 +1,11 @@
 unit class CRDT::Timestamp;
+my atomicint $next = 0;
 
 class X::CRDT::Timestamp::Previous {
     method message { "Timestamp cannot go back in time" }
 }
 
-has UInt $.counter = 0;
+has UInt $.counter = $next⚛++;
 has Str  $.instance-id is required;
 
 method succ {

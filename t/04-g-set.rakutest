@@ -27,6 +27,10 @@ nok %a<c>;
 
 %a.set: "d";
 
+dies-ok {
+    %a.unset: "d"
+}
+
 is %a.elems, 3;
 is %a.keys.sort, <a b d>;
 
@@ -54,5 +58,31 @@ test-supply %a.merged, *.keys.sort, < 1 2 3 A B a b d >, 2;
 %a.merge: set <1 2 3>;
 %a.merge: set <1 2 3 a b d>;
 %a.merge: set < A B >;
+
+my %n is G-Set;
+
+%n<a> = True;
+
+ok %n<a>;
+nok %n<b>;
+
+%n<b> = True;
+ok %n<a>;
+ok %n<b>;
+
+my $m = %n.copy;
+$m<c> = True;
+
+ok $m<c>;
+nok %n<c>;
+
+%n<d> = True;
+
+is %n.elems, 3;
+is %n.keys.sort, <a b d>;
+
+dies-ok {
+    %n<d> = False
+}
 
 done-testing;

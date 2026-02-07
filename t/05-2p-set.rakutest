@@ -62,4 +62,29 @@ test-supply %a.changed, *.<del>.keys.sort, < 1 b   >, 1;
 %a.merge: %(:add(set < A >), :del(set <   >));
 %a.merge: %(:add(set <   >), :del(set < 1 >));
 
+my %n is P2-Set;
+%n.set: "a";
+
+ok %n<a>;
+nok %n<b>;
+
+%n<b> = True;
+ok %n<a>;
+ok %n<b>;
+
+%n<b> = False;
+ok %n<a>;
+nok %n<b>;
+
+my $m = %n.copy;
+$m<c> = True;
+
+ok $m<c>;
+nok %n<c>;
+
+$m<d> = False;
+
+is %n.elems, 1;
+is %n.keys.sort, < a >;
+
 done-testing;

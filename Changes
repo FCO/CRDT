@@ -1,6 +1,11 @@
 Revision history for CRDT
 
 {{$NEXT}}
+    - make clock "global"
+    - make 2p-set accept %set<key> = True/False
+    - rename .t -> .rakutest
+    - make g-set accept %set<key> = True
+    - make or-set accept %set<key> = True/False
 
 0.0.10  2026-02-07T01:26:44Z
     - change llw-element-set AT-KEY

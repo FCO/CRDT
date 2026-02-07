@@ -28,10 +28,16 @@ method set($item) {
 
 method unset($) { X::G-Set::Unset.new.throw }
 
-method AT-KEY($item) {
-    await $!lock.lock;
-    LEAVE $!lock.unlock;
-    %!values.AT-KEY: $item
+method AT-KEY($item) is rw {
+    Proxy.new:
+        FETCH => sub ($) {
+            await $!lock.lock;
+            LEAVE $!lock.unlock;
+            %!values.AT-KEY: $item
+        },
+        STORE => sub ($, Bool() $ where { .so }) {
+            self.set: $item
+        }
 }
 
 method copy {
