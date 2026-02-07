@@ -1,5 +1,5 @@
 use UUID;
-unit role CRDT:ver<0.0.11>:auth<zef:FCO>;
+unit role CRDT:ver<0.0.12>:auth<zef:FCO>;
 
 has Str $.instance-id           = ~UUID.new;
 has Supplier $!change-supplier .= new;
