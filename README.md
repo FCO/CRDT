@@ -26,7 +26,7 @@ CRDT is [https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type](https
 AUTHOR
 ======
 
-Fernando Correa <fernando.correa@humanstate.com>
+Fernando Correa <fco@cpan.org>
 
 COPYRIGHT AND LICENSE
 =====================
