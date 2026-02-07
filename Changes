@@ -2,6 +2,9 @@ Revision history for CRDT
 
 {{$NEXT}}
 
+0.0.10  2026-02-07T01:26:44Z
+    - change llw-element-set AT-KEY
+
 0.0.9  2022-04-01T22:36:46+01:00
     - move to zef ecosystem
 
