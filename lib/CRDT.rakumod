@@ -45,7 +45,7 @@ CRDT is L<https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type>
 
 =head1 AUTHOR
 
-Fernando Correa <fernando.correa@humanstate.com>
+Fernando Correa <fco@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
