@@ -59,22 +59,22 @@ method unset($item) {
     $item
 }
 
-method AT-KEY($item) {
-    await $!lock.lock;
-    LEAVE $!lock.unlock;
-    my $add = %!add.keys.first: *.value eqv $item;
-    my $del = %!del.keys.first: *.value eqv $item;
-    do if $add && $del {
-        if $add.timestamp > $del.timestamp {
-            True
-        } else {
-            False
+method AT-KEY($item) is rw {
+    Proxy.new:
+        FETCH => sub ($) {
+            $!lock.protect: {
+                my $add = %!add.keys.first: *.value eqv $item;
+                my $del = %!del.keys.first: *.value eqv $item;
+                do if $add && $del {
+                    $add.timestamp > $del.timestamp
+                } else {
+                    so $add
+                }
+            }
+        },
+        STORE => sub ($, Bool() $value) {
+            $value ?? self.set: $item !! self.unset: $item
         }
-    } elsif $add {
-        True
-    } else {
-        False
-    }
 }
 
 method keys {

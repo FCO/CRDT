@@ -76,4 +76,38 @@ my LWW-Element-Set::Item $item .= new: :1value, :timestamp(CRDT::Timestamp.new: 
 
 %a.merge: %( :add(set(($item))), :del(set()), :timestamp(CRDT::Timestamp.new: :instance-id<b>) );
 
+my %n is LWW-Element-Set;
+%n<a> = True;
+
+ok %n<a>;
+nok %n<b>;
+
+%n<b> = True;
+ok %n<a>;
+ok %n<b>;
+
+%n<b> = False;
+ok %n<a>;
+nok %n<b>;
+
+my $m = %n.copy;
+$m<c> = True;
+
+ok $m<c>;
+nok %n<c>;
+
+$m<d> = False;
+nok $m<d>;
+$m<d> = True;
+ok $m<d>;
+$m<d> = False;
+nok $m<d>;
+$m<d> = True;
+ok $m<d>;
+$m<d> = False;
+nok $m<d>;
+
+is %n.elems, 1;
+is %n.keys.sort, < a >;
+
 done-testing;
