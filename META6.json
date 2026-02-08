@@ -6,7 +6,8 @@
   "build-depends": [
   ],
   "depends": [
-    "UUID"
+    "UUID",
+    "JSON::Fast"
   ],
   "description": "Conflict-free Replicated Data Types for Raku",
   "license": "Artistic-2.0",
