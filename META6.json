@@ -7,7 +7,8 @@
   ],
   "depends": [
     "UUID",
-    "JSON::Fast"
+    "JSON::Fast",
+    "String::Utils"
   ],
   "description": "Conflict-free Replicated Data Types for Raku",
   "license": "Artistic-2.0",
