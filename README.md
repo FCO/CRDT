@@ -166,7 +166,9 @@ $reg.merge($copy);       # latest wins
 say $reg.get;            # 13
 ```
 
-### CRDT::Storage A container for multiple CRDT instances keyed by unique IDs. Each item stores its CRDT and a content hash based on the CRDT's `.export`. The storage computes a global hash over items to quickly detect identical replicas. It supports adding items, querying, copying, and `.sync($other)` to converge with another storage by merging per-item CRDTs.
+### CRDT::Storage
+
+A container for multiple CRDT instances keyed by unique IDs. Each item stores its CRDT and a content hash based on the CRDT's `.export`. The storage computes a global hash over items to quickly detect identical replicas. It supports adding items, querying, copying, and `.sync($other)` to converge with another storage by merging per-item CRDTs.
 
 ```raku
 use CRDT::Storage;

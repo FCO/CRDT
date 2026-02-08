@@ -200,6 +200,7 @@ say $reg.get;            # 13
 =end code
 
 =head3 CRDT::Storage
+
 A container for multiple CRDT instances keyed by unique IDs. Each item stores
 its CRDT and a content hash based on the CRDT's C<.export>. The storage
 computes a global hash over items to quickly detect identical replicas.
@@ -207,6 +208,7 @@ It supports adding items, querying, copying, and C<.sync($other)> to converge
 with another storage by merging per-item CRDTs.
 
 =begin code :lang<raku>
+
 use CRDT::Storage;
 use G-Counter;
 
@@ -226,6 +228,7 @@ say +$store.get-item($id);   # 3
 # item introspection
 say $store.has-item($id);        # True
 say $store.get-item-hash($id);   # sha1 of JSON export
+
 =end code
 
 =head2 Event Streams
