@@ -1,6 +1,8 @@
 Revision history for CRDT
 
 {{$NEXT}}
+
+0.0.15  2026-02-08T05:51:02Z
     - fix docs
 
 0.0.14  2026-02-08T05:36:31Z
