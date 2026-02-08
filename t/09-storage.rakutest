@@ -1,0 +1,27 @@
+use Test;
+use CRDT::Storage;
+use G-Counter;
+
+my CRDT::Storage $storage1 .= new;
+
+my G-Counter $a .= new;
+my $id = $storage1.add-item: $a;
+ok $id;
+is-deeply $storage1.get-item($id), $a;
+
+my $storage2 = $storage1.copy;
+ok $storage2;
+is +$storage2.get-item($id), +$a;
+
+ok $a++ == 0;
+ok ++$a == 2;
+isnt +$storage2.get-item($id), +$a;
+$storage2.get-item($id)++;
+is +$storage2.get-item($id), 1;
+
+my $synced = $storage1.sync: $storage2;
+
+is +$a, 3;
+is +$storage1.get-item($id), +$a;
+
+done-testing

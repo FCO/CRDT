@@ -14,6 +14,7 @@
   "perl": "6.d",
   "provides": {
     "CRDT": "lib/CRDT.rakumod",
+    "CRDT::Storage": "lib/CRDT/Storage.rakumod",
     "CRDT::Timestamp": "lib/CRDT/Timestamp.rakumod",
     "G-Counter": "lib/G-Counter.rakumod",
     "G-Set": "lib/G-Set.rakumod",

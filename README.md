@@ -166,6 +166,30 @@ $reg.merge($copy);       # latest wins
 say $reg.get;            # 13
 ```
 
+### CRDT::Storage A container for multiple CRDT instances keyed by unique IDs. Each item stores its CRDT and a content hash based on the CRDT's `.export`. The storage computes a global hash over items to quickly detect identical replicas. It supports adding items, querying, copying, and `.sync($other)` to converge with another storage by merging per-item CRDTs.
+
+```raku
+use CRDT::Storage;
+use G-Counter;
+
+my CRDT::Storage $store .= new;
+
+# add a counter and mutate it
+my $id = $store.add-item: G-Counter.new;
+$store.get-item($id).increment;
+
+# replicate and diverge, then converge via sync
+my $replica = $store.copy;
+$replica.get-item($id) += 2;
+
+$store.sync($replica);       # merges underlying CRDTs by id
+say +$store.get-item($id);   # 3
+
+# item introspection
+say $store.has-item($id);        # True
+say $store.get-item-hash($id);   # sha1 of JSON export
+```
+
 Event Streams Every mutation emits on `.changed`; every successful merge emits on `.merged`. Subscribers receive the current `.export` payload.
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
