@@ -98,7 +98,9 @@ These streams are useful to propagate state changes over a transport (queues, so
 Implemented CRDTs
 -----------------
 
-### G-Counter Grow-only counter. Only increments are allowed. Merge takes the pointwise maximum of per-replica contributions; numeric value is the sum.
+### G-Counter
+
+Grow-only counter. Only increments are allowed. Merge takes the pointwise maximum of per-replica contributions; numeric value is the sum.
 
 ```raku
 my G-Counter $a .= new;
@@ -109,7 +111,9 @@ my $c = $a.merge: $b;    # merges by max per replica
 say +$c;                 # numeric value
 ```
 
-### PN-Counter Positive/Negative counter, implemented as two G-Counters. Supports increments and decrements. Merge is the max of each side; value is positive minus negative.
+### PN-Counter
+
+Positive/Negative counter, implemented as two G-Counters. Supports increments and decrements. Merge is the max of each side; value is positive minus negative.
 
 ```raku
 my PN-Counter $p .= new;
@@ -119,7 +123,9 @@ my $r = $p.merge: $q;    # convergent result
 say +$r;                 # 6
 ```
 
-### G-Set Grow-only set. Elements can be added, never removed. Associative access is supported via `AT-KEY` proxy.
+### G-Set
+
+Grow-only set. Elements can be added, never removed. Associative access is supported via `AT-KEY` proxy.
 
 ```raku
 my %gs is G-Set;
@@ -129,7 +135,9 @@ say %gs<a>;              # True
 # %gs.unset: "a";
 ```
 
-### 2P-Set (P2-Set) Two-Phase Set with separate add/remove sets. Once removed, an element cannot be re-added. Associative access supports `True` to add and `False` to remove.
+### 2P-Set (P2-Set)
+
+Two-Phase Set with separate add/remove sets. Once removed, an element cannot be re-added. Associative access supports `True` to add and `False` to remove.
 
 ```raku
 my %tw is P2-Set;
@@ -138,7 +146,9 @@ my %tw is P2-Set;
 say %tw<a>;              # False
 ```
 
-### LWW-Element-Set Last-Writer-Wins Element Set. Each add/remove is timestamped per replica; the latest action for an element decides membership.
+### LWW-Element-Set
+
+Last-Writer-Wins Element Set. Each add/remove is timestamped per replica; the latest action for an element decides membership.
 
 ```raku
 my %l is LWW-Element-Set;
@@ -147,7 +157,9 @@ my %l is LWW-Element-Set;
 say %l<a>;               # Bool
 ```
 
-### OR-Set Observed-Remove Set. Adds create unique tags; removes mark observed tags. An element is present if there exists an add tag not matched by a remove tag.
+### OR-Set
+
+Observed-Remove Set. Adds create unique tags; removes mark observed tags. An element is present if there exists an add tag not matched by a remove tag.
 
 ```raku
 my %or is OR-Set;
@@ -156,7 +168,9 @@ my %or is OR-Set;
 say %or<a>;              # Bool based on tags difference
 ```
 
-### LWW-Register Last-Writer-Wins register storing any scalar value. Each set advances a per-replica timestamp; merge selects the value with the latest timestamp.
+### LWW-Register
+
+Last-Writer-Wins register storing any scalar value. Each set advances a per-replica timestamp; merge selects the value with the latest timestamp.
 
 ```raku
 my LWW-Register $reg .= new;
@@ -192,8 +206,10 @@ say $store.has-item($id);        # True
 say $store.get-item-hash($id);   # sha1 of JSON export
 ```
 
-Event Streams Every mutation emits on `.changed`; every successful merge emits on `.merged`. Subscribers receive the current `.export` payload.
------------------------------------------------------------------------------------------------------------------------------------------------
+Event Streams
+-------------
+
+Every mutation emits on `.changed`; every successful merge emits on `.merged`. Subscribers receive the current `.export` payload.
 
 ```raku
 my G-Counter $a .= new;

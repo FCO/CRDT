@@ -89,6 +89,7 @@ $reg.set: 42;
 say $reg.get;            # 42
 my $reg2 = $reg.copy;
 my $reg-merged = $reg.merge($reg2);  # value chosen by latest timestamp
+
 =end code
 
 =head1 DESCRIPTION
@@ -118,85 +119,106 @@ received C<.export> payloads and converge.
 =head2 Implemented CRDTs
 
 =head3 G-Counter
+
 Grow-only counter. Only increments are allowed. Merge takes the pointwise
 maximum of per-replica contributions; numeric value is the sum.
 
 =begin code :lang<raku>
+
 my G-Counter $a .= new;
 $a++;           # sugar for .increment
 $a += 3;        # add many at once
 my $b = $a.copy; $b++;
 my $c = $a.merge: $b;    # merges by max per replica
 say +$c;                 # numeric value
+
 =end code
 
 =head3 PN-Counter
+
 Positive/Negative counter, implemented as two G-Counters. Supports increments
 and decrements. Merge is the max of each side; value is positive minus negative.
 
 =begin code :lang<raku>
+
 my PN-Counter $p .= new;
 $p += 10; $p -= 3;       # value == 7
 my $q = $p.copy; $q--;
 my $r = $p.merge: $q;    # convergent result
 say +$r;                 # 6
+
 =end code
 
 =head3 G-Set
+
 Grow-only set. Elements can be added, never removed. Associative access is
 supported via C<AT-KEY> proxy.
 
 =begin code :lang<raku>
+
 my %gs is G-Set;
 %gs<a> = True;           # add
 say %gs<a>;              # True
 # removal is disallowed and dies
 # %gs.unset: "a";
+
 =end code
 
 =head3 2P-Set (P2-Set)
+
 Two-Phase Set with separate add/remove sets. Once removed, an element cannot be
 re-added. Associative access supports C<True> to add and C<False> to remove.
 
 =begin code :lang<raku>
+
 my %tw is P2-Set;
 %tw<a> = True;           # add
 %tw<a> = False;          # remove — permanent
 say %tw<a>;              # False
+
 =end code
 
 =head3 LWW-Element-Set
+
 Last-Writer-Wins Element Set. Each add/remove is timestamped per replica; the
 latest action for an element decides membership.
 
 =begin code :lang<raku>
+
 my %l is LWW-Element-Set;
 %l<a> = True;            # add
 %l<a> = False;           # remove wins if newer
 say %l<a>;               # Bool
+
 =end code
 
 =head3 OR-Set
+
 Observed-Remove Set. Adds create unique tags; removes mark observed tags.
 An element is present if there exists an add tag not matched by a remove tag.
 
 =begin code :lang<raku>
+
 my %or is OR-Set;
 %or<a> = True;           # add creates tag
 %or<a> = False;          # remove marks observed tags
 say %or<a>;              # Bool based on tags difference
+
 =end code
 
 =head3 LWW-Register
+
 Last-Writer-Wins register storing any scalar value. Each set advances a
 per-replica timestamp; merge selects the value with the latest timestamp.
 
 =begin code :lang<raku>
+
 my LWW-Register $reg .= new;
 $reg.set: 42;
 my $copy = $reg.copy; $copy.set: 13;
 $reg.merge($copy);       # latest wins
 say $reg.get;            # 13
+
 =end code
 
 =head3 CRDT::Storage
@@ -232,14 +254,17 @@ say $store.get-item-hash($id);   # sha1 of JSON export
 =end code
 
 =head2 Event Streams
+
 Every mutation emits on C<.changed>; every successful merge emits on C<.merged>.
 Subscribers receive the current C<.export> payload.
 
 =begin code :lang<raku>
+
 my G-Counter $a .= new;
 my $iid = $a.instance-id;
 $a.changed.tap: -> $exp { say $exp{$iid} };
 $a.increment;  # tap prints 1
+
 =end code
 
 =head1 SEE ALSO
