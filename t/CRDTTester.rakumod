@@ -128,5 +128,5 @@ sub test-merge(CRDT $a-o is copy, CRDT $b-o is copy, &test) is export #`(is test
                 test |(:$last-merge if $last-merge && &test.signature.params.first: *.name eq '$last-name'), $b
             }
         }
-    }, "Test merge exported data"
+    }, "Test merge exported data";
 }

@@ -1,6 +1,7 @@
 Revision history for CRDT
 
 {{$NEXT}}
+    - Create LWW-Hash
 
 0.0.15  2026-02-08T05:51:02Z
     - fix docs

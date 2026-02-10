@@ -1,0 +1,128 @@
+use Test;
+use lib ".";
+use lib "t";
+use CRDTTester;
+use LWW-Hash;
+use CRDT::Timestamp;
+
+# my $*TEST-DEBUG = True;
+my %a is LWW-Hash;
+
+test-supply %a.changed, *.<add>.keys>>.value.sort, (1,  ), 0;
+test-supply %a.changed, *.<del>.keys>>.key.sort,   (    ), 0;
+test-supply %a.changed, *.<add>.keys>>.value.sort, (1, 2), 1;
+test-supply %a.changed, *.<del>.keys>>.key.sort,   (    ), 1;
+test-supply %a.changed, *.<add>.keys>>.value.sort, (1, 2), 2;
+test-supply %a.changed, *.<del>.keys>>.key.sort,   ("b",), 2;
+
+is %a.set("a", 1), 1, '%a<a> = 1';
+
+is %a<a>, 1, '%a<a> is 1';
+nok %a<b>, '%a<b> not set';
+
+%a.set: "b", 2;
+is %a<a>, 1, '%a<a> is 1';
+is %a<b>, 2, '%a<b> is 2';
+
+is %a.unset("b"), 2;
+is %a<a>, 1, '%a<a> is 1';
+nok %a<b>, '%a<b> not set';
+
+my $b = %a.copy;
+$b.set: "c", 3;
+
+is $b<c>, 3, '$b<c> is 3';
+nok %a<c>, '%a<c> not set';
+
+ok !$b.unset("d"), '$b unset d';
+nok $b<d>, '$b<d> not set';
+is $b.set("d", 4), 4, '$b<d> set to 4';
+is $b<d>, 4, '$b<d> is 4';
+is $b.unset("d"), 4, '$b unset d';
+nok $b<d>, '$b<d> not set';
+is $b.set("d", 5), 5, '$b<d> set to 5';
+is $b<d>, 5, '$b<d> is 5';
+is $b.unset("d"), 5, '$b unset d';
+nok $b<d>, '$b<d> not set';
+
+is %a.elems, 1;
+is %a.keys.sort, < a >;
+
+test-copy %a;
+
+test-merge %a, $b, -> $res, :$last-merge {
+   is $res<a>, $last-merge<a> with $last-merge;
+   is $res<b>, $last-merge<b> with $last-merge;
+   is $res<c>, $last-merge<c> with $last-merge;
+   is $res<d>, $last-merge<d> with $last-merge;
+
+   is $res<a>, 1, '$res<a> is 1';
+   nok $res<b>, '$res<b> not set';
+   is $res<c>, 3, '$res<c> is 3';
+   nok $res<d>, '$res<d> not set';
+   is $res.set("d", 4), 4, '$res<d> is 4';
+   is $res<d>, 4, '$res<d> is 4';
+   is $res.unset("d"), 4, '$res unset d';
+   nok $res<d>, '$res<d> not set';
+   is $res.set("d", 5), 5, "$res<d> = 5";
+   is $res<d>, 5, '$res<d> is 5';
+   is $res.unset("d"), 5, '$res unset d';
+   nok $res<d>, '$res<d> not set';
+}
+
+# my $*TEST-DEBUG = True;
+test-supply %a.merged, *.<add>.keys>>.key.sort, < a b bla >, 0;
+test-supply %a.merged, *.<del>.keys>>.key.sort, < b     >, 0;
+
+my LWW-Hash::Item $item .= new: :key<bla>, :1value, :timestamp(CRDT::Timestamp.new: :instance-id<b>);
+%a.merge: %( :add(set(($item))), :del(set()), :timestamp(CRDT::Timestamp.new: :instance-id<b>) );
+
+my %n is LWW-Hash;
+%n<a> = 1;
+
+ok %n<a>;
+nok %n<b>;
+
+%n<b> = 2;
+ok %n<a>;
+ok %n<b>;
+
+%n<b>:delete;
+ok %n<a>;
+nok %n<b>;
+
+my $m = %n.copy;
+$m<c> = 3;
+
+ok $m<c>;
+nok %n<c>;
+
+$m<d>:delete;
+nok $m<d>;
+$m<d> = 4;
+ok $m<d>;
+$m<d>:delete;
+nok $m<d>;
+$m<d> = 5;
+ok $m<d>;
+$m<d>:delete;
+nok $m<d>;
+
+is %n.elems, 1;
+is %n.keys.sort, < a >, "keys";
+is %n.values.sort, (1,), "values";
+is %n.kv, ("a", 1), "kv";
+
+%n<d> = 5;
+is %n.elems, 2;
+is %n.keys.sort, < a d >, "keys";
+is %n.values.sort, (1, 5), "values";
+
+subtest {
+    for 1 .. 5 {
+        %n<d> = .Int;
+        is %n<d>, .Int, '%n<d> is ' ~ .Int
+    }
+}, "changing value";
+
+done-testing;
